@@ -1,6 +1,12 @@
 package main
-import "fmt"
+
+import (
+	"./entry"
+	"fmt"
+	"os"
+)
 
 func main() {
-	fmt.Println("Hello Go!")
+	entry.GetData()
+	fmt.Fprintf(os.Stdout, "Некорректно введено значение x")
 }
