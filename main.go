@@ -7,6 +7,6 @@ import (
 )
 
 func main() {
-	entry.GetData()
-	fmt.Fprintf(os.Stdout, "Некорректно введено значение x")
+	data := entry.GetData()
+	fmt.Fprintf(os.Stdout, "Некорректно введено значение x0",data)
 }
