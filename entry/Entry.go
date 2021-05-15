@@ -10,10 +10,10 @@ import (
 )
 
 type NewData struct {
-	n      int
-	arrayX []float32
-	arrayY []float32
-	x      float32
+	N      int
+	ArrayX []float32
+	ArrayY []float32
+	X      float32
 }
 
 func GetData() *NewData {
@@ -44,14 +44,14 @@ func (data *NewData) readFromFile() {
 	line, err := reader.ReadString('\n')
 	line = line[:len(line)-2]
 	s := strings.Split(line, " ")
-	(*data).n = len(s)
+	(*data).N = len(s)
 	for i := 0; i < len(s); i++ {
 		x, err := strconv.ParseFloat(s[i], 32)
 		if err != nil {
 			fmt.Fprintf(os.Stdout, "Некорректно введено значение x%d", i)
 			os.Exit(1)
 		}
-		(*data).arrayX = append((*data).arrayX, float32(x))
+		(*data).ArrayX = append((*data).ArrayX, float32(x))
 	}
 
 	line, err = reader.ReadString('\n')
@@ -63,13 +63,13 @@ func (data *NewData) readFromFile() {
 			fmt.Fprintf(os.Stdout, "Некорректно введено значение y%d", i)
 			os.Exit(1)
 		}
-		(*data).arrayY = append((*data).arrayY, float32(y))
+		(*data).ArrayY = append((*data).ArrayY, float32(y))
 	}
 
 	line, err = reader.ReadString('\n')
 	line = line[:len(line)-2]
 	x, err := strconv.ParseFloat(line, 32)
-	(*data).x = float32(x)
+	(*data).X = float32(x)
 }
 
 func (data *NewData) readFromConsole() {
@@ -88,7 +88,7 @@ func (data *NewData) readFromConsole() {
 		fmt.Scan(&function)
 		y, err = strconv.ParseInt(function, 10, 32)
 	}
-	(*data).n = int(y)
+	(*data).N = int(y)
 
 	if tableOrFunction == "func" {
 
@@ -112,28 +112,28 @@ func (data *NewData) readFromConsole() {
 			x2, err = strconv.ParseFloat(to, 32)
 		}
 
-		h := (x2 - x1) /float64((*data).n)
+		h := (x2 - x1) /float64((*data).N)
 		for i := x1; i <= x2; i += h {
-			(*data).arrayX = append((*data).arrayX, float32(i))
+			(*data).ArrayX = append((*data).ArrayX, float32(i))
 			if function == "1" {
-				(*data).arrayY = append((*data).arrayY, float32(math.Sin(i)))
+				(*data).ArrayY = append((*data).ArrayY, float32(math.Sin(i)))
 			}else if function == "2"{
-				(*data).arrayY = append((*data).arrayY, float32(i))
+				(*data).ArrayY = append((*data).ArrayY, float32(i))
 			}else if function == "3"{
-				(*data).arrayY = append((*data).arrayY, float32(i*i - i - 3))
+				(*data).ArrayY = append((*data).ArrayY, float32(i*i - i - 3))
 			}
 		}
 	} else {
 
 		var inp string
-		for i := 0; i < data.n; i++ {
+		for i := 0; i < data.N; i++ {
 
 			for ; ; {
 				fmt.Fprintf(os.Stdout, "Введите значение х%d:", i)
 				fmt.Scan(&inp)
 				if x, err := strconv.ParseFloat(inp, 32)
 					err == nil {
-					(*data).arrayX = append((*data).arrayX, float32(x))
+					(*data).ArrayX = append((*data).ArrayX, float32(x))
 					break
 				}
 			}
@@ -143,7 +143,7 @@ func (data *NewData) readFromConsole() {
 				fmt.Scan(&inp)
 				if y, err := strconv.ParseFloat(inp, 32)
 					err == nil {
-					(*data).arrayY = append((*data).arrayY, float32(y))
+					(*data).ArrayY = append((*data).ArrayY, float32(y))
 					break
 				}
 			}
@@ -155,5 +155,5 @@ func (data *NewData) readFromConsole() {
 		fmt.Scan(&function)
 		z, err = strconv.ParseFloat(function, 32)
 	}
-	(*data).x = float32(z)
+	(*data).X = float32(z)
 }
