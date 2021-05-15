@@ -2,11 +2,11 @@ package main
 
 import (
 	"./entry"
-	"fmt"
-	"os"
+	"./methods"
 )
 
 func main() {
 	data := entry.GetData()
-	fmt.Fprintf(os.Stdout, "",data)
+	lag := methods.Lagrange{}
+	lag.Count(data)
 }

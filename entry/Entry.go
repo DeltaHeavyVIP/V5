@@ -9,20 +9,20 @@ import (
 	"strings"
 )
 
-type newData struct {
+type NewData struct {
 	n      int
 	arrayX []float32
 	arrayY []float32
 	x      float32
 }
 
-func GetData() *newData {
-	fileOrConsole := "" //TODO
+func GetData() *NewData {
+	fileOrConsole := "file" //TODO
 	for ; fileOrConsole != "file" && fileOrConsole != "console"; {
 		fmt.Print("Ввод данных из file, console: ")
 		fmt.Scan(&fileOrConsole)
 	}
-	data := newData{}
+	data := NewData{}
 	if fileOrConsole == "file" {
 		data.readFromFile()
 	} else {
@@ -31,7 +31,7 @@ func GetData() *newData {
 	return &data
 }
 
-func (data *newData) readFromFile() {
+func (data *NewData) readFromFile() {
 	file, err := os.Open("resources/input.txt")
 	if err != nil {
 		fmt.Println("Не удалось открыть файл.")
@@ -72,7 +72,7 @@ func (data *newData) readFromFile() {
 	(*data).x = float32(x)
 }
 
-func (data *newData) readFromConsole() {
+func (data *NewData) readFromConsole() {
 
 	tableOrFunction := "" //TODO
 	for ; tableOrFunction != "func" && tableOrFunction != "table"; {
