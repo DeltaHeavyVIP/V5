@@ -8,5 +8,5 @@ import (
 
 func main() {
 	data := entry.GetData()
-	fmt.Fprintf(os.Stdout, "Некорректно введено значение x0",data)
+	fmt.Fprintf(os.Stdout, "",data)
 }

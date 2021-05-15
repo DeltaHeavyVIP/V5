@@ -3,6 +3,7 @@ package entry
 import (
 	"bufio"
 	"fmt"
+	"math"
 	"os"
 	"strconv"
 	"strings"
@@ -12,11 +13,12 @@ type newData struct {
 	n      int
 	arrayX []float32
 	arrayY []float32
+	x      float32
 }
 
 func GetData() *newData {
-	fileOrConsole := "file" //TODO
-	for ;fileOrConsole != "file" && fileOrConsole != "console"; {
+	fileOrConsole := "" //TODO
+	for ; fileOrConsole != "file" && fileOrConsole != "console"; {
 		fmt.Print("Ввод данных из file, console: ")
 		fmt.Scan(&fileOrConsole)
 	}
@@ -63,29 +65,65 @@ func (data *newData) readFromFile() {
 		}
 		(*data).arrayY = append((*data).arrayY, float32(y))
 	}
+
+	line, err = reader.ReadString('\n')
+	line = line[:len(line)-2]
+	x, err := strconv.ParseFloat(line, 32)
+	(*data).x = float32(x)
 }
 
 func (data *newData) readFromConsole() {
-	tableOrFunction := "table" //TODO
+
+	tableOrFunction := "" //TODO
 	for ; tableOrFunction != "func" && tableOrFunction != "table"; {
 		fmt.Print("Задать данные набором или фукнуцией:")
 		fmt.Scan(&tableOrFunction)
 	}
+
 	function := ""
+
+	y, err := strconv.ParseInt(function, 10, 32)
+	for ; err != nil; {
+		fmt.Print("Введите количество точек:")
+		fmt.Scan(&function)
+		y, err = strconv.ParseInt(function, 10, 32)
+	}
+	(*data).n = int(y)
+
 	if tableOrFunction == "func" {
-		for ; function != "1" && function != "2"; {
-			fmt.Print("Выберите функцию:\n\t\t sin(x) - введите 1 \n\t\t х \t\t- введите 2")
+
+		for ; function != "1" && function != "2" && function != "3"; {
+			fmt.Print("Выберите функцию:\n\t\t sin(x) \t- введите 1 \n\t\t х \t\t\t- введите 2 \n\t\t x^2-x-3 \t - введите 3\n")
 			fmt.Scan(&function)
 		}
-		//TODO
-	} else {
-		y, err := strconv.ParseInt(function, 10, 32)
+
+		to := "z"
+		x1, err := strconv.ParseFloat(to, 32)
 		for ; err != nil; {
-			fmt.Print("Введите количество точек:")
-			fmt.Scan(&function)
-			y, err = strconv.ParseInt(function, 10, 32)
+			fmt.Print("Введите левую границу:")
+			fmt.Scan(&to)
+			x1, err = strconv.ParseFloat(to, 32)
 		}
-		(*data).n = int(y)
+
+		x2, err := strconv.ParseFloat("z", 32)
+		for ; err != nil; {
+			fmt.Print("Введите правую границу:")
+			fmt.Scan(&to)
+			x2, err = strconv.ParseFloat(to, 32)
+		}
+
+		h := (x2 - x1) /float64((*data).n)
+		for i := x1; i <= x2; i += h {
+			(*data).arrayX = append((*data).arrayX, float32(i))
+			if function == "1" {
+				(*data).arrayY = append((*data).arrayY, float32(math.Sin(i)))
+			}else if function == "2"{
+				(*data).arrayY = append((*data).arrayY, float32(i))
+			}else if function == "3"{
+				(*data).arrayY = append((*data).arrayY, float32(i*i - i - 3))
+			}
+		}
+	} else {
 
 		var inp string
 		for i := 0; i < data.n; i++ {
@@ -111,4 +149,11 @@ func (data *newData) readFromConsole() {
 			}
 		}
 	}
+	z, err := strconv.ParseFloat("z", 32)
+	for ; err != nil; {
+		fmt.Print("Введите значение X:")
+		fmt.Scan(&function)
+		z, err = strconv.ParseFloat(function, 32)
+	}
+	(*data).x = float32(z)
 }
