@@ -8,26 +8,15 @@ import (
 	"image/color"
 	"math/rand"
 )
-/*
-pts := make(plotter.XYs, data.N)
-	for i := range pts {
-		pts[i].X = float64(data.ArrayX[i])
-		pts[i].Y = float64(data.ArrayY[i])
-	}
-*/
+
 func Lagrange(data *NewData){
-	rand.Seed(int64(0))
 	scatterData := point(data)
 	lineData := line(data)
 
-	// Create a new plot, set its title and
-	// axis labels.
 	p := plot.New()
-
 	p.Title.Text = "Lagrange"
 	p.X.Label.Text = "X"
 	p.Y.Label.Text = "Y"
-	// Draw a grid behind the data
 	p.Add(plotter.NewGrid())
 
 	// Make a scatter plotter and set its style.
@@ -67,7 +56,7 @@ func point(data *NewData) plotter.XYs{
 
 func line(data *NewData) plotter.XYs {
 	var h float32 = 0.01
-	var l int = 0
+	var l int = 1
 	for k:=data.ArrayX[0];k < data.ArrayX[data.N-1];k+=h {
 		l+=1
 	}
@@ -93,6 +82,43 @@ func line(data *NewData) plotter.XYs {
 	return pts
 }
 
-func DrawNewton(data *NewData){
+func Newton(data *NewData){
+	rand.Seed(int64(0))
+	scatterData := point(data)
+	lineData := line(data)
 
+	// Create a new plot, set its title and
+	// axis labels.
+	p := plot.New()
+
+	p.Title.Text = "Lagrange"
+	p.X.Label.Text = "X"
+	p.Y.Label.Text = "Y"
+	// Draw a grid behind the data
+	p.Add(plotter.NewGrid())
+
+	// Make a scatter plotter and set its style.
+	s, err := plotter.NewScatter(scatterData)
+	if err != nil {
+		panic(err)
+	}
+	s.GlyphStyle.Color = color.RGBA{R: 7, G: 28, B: 112}
+
+	// Make a line plotter and set its style.
+	l, err := plotter.NewLine(lineData)
+	if err != nil {
+		panic(err)
+	}
+	l.LineStyle.Width = vg.Points(1)
+	l.LineStyle.Color = color.RGBA{R: 165, G: 116, B: 0}
+
+	// entry for each
+	p.Add(s, l)
+	p.Legend.Add("points", s)
+	p.Legend.Add("function", l)
+
+	// Save the plot to a PNG file.
+	if err := p.Save(6*vg.Inch, 6*vg.Inch, "lagrange.png"); err != nil {
+		panic(err)
+	}
 }
