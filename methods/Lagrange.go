@@ -16,12 +16,13 @@ func (Lagrange) Count(data *NewData) {
 	for i := 0; i < data.N; i++ {
 		for j := 0; j < data.N; j++ {
 			if i != j {
-				up *= data.X - data.ArrayX[i]
+				up *= data.X - data.ArrayX[j]
 				down *= data.ArrayX[i] - data.ArrayX[j]
 			}
 		}
-		res += data.ArrayY[i] * up / down
+		res +=data.ArrayY[i] * up / down
+		up,down = 1,1
 	}
-	_, _ = fmt.Fprintf(os.Stdout, "Вычесленный Y методом Лагранжа: %d", res)
-	draw.DrawLagrange(data)
+	_, _ = fmt.Fprintf(os.Stdout, "Вычесленный Y методом Лагранжа: %f \n", res)
+	draw.Lagrange(data)
 }
