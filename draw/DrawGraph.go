@@ -6,15 +6,24 @@ import (
 	"gonum.org/v1/plot/plotter"
 	"gonum.org/v1/plot/vg"
 	"image/color"
-	"math/rand"
+	"math"
 )
 
-func Lagrange(data *NewData){
+func Graph(data *NewData, name int) {
 	scatterData := point(data)
-	lineData := line(data)
+	var lineData plotter.XYs
+	if name == 1 {
+		lineData = lineLag(data)
+	} else {
+		lineData = lineNewt(data)
+	}
 
 	p := plot.New()
-	p.Title.Text = "Lagrange"
+	if name == 1 {
+		p.Title.Text = "Lagrange"
+	} else {
+		p.Title.Text = "Newton"
+	}
 	p.X.Label.Text = "X"
 	p.Y.Label.Text = "Y"
 	p.Add(plotter.NewGrid())
@@ -40,85 +49,90 @@ func Lagrange(data *NewData){
 	p.Legend.Add("function", l)
 
 	// Save the plot to a PNG file.
-	if err := p.Save(6*vg.Inch, 6*vg.Inch, "lagrange.png"); err != nil {
-		panic(err)
+	if name == 1 {
+		if err := p.Save(6*vg.Inch, 6*vg.Inch, "lagrange.png"); err != nil {
+			panic(err)
+		}
+	} else {
+		if err := p.Save(6*vg.Inch, 6*vg.Inch, "newton.png"); err != nil {
+			panic(err)
+		}
 	}
 }
 
-func point(data *NewData) plotter.XYs{
+func point(data *NewData) plotter.XYs {
 	pts := make(plotter.XYs, data.N)
-	for i:=0;i<data.N;i++ {
+	for i := 0; i < data.N; i++ {
 		pts[i].X = float64(data.ArrayX[i])
 		pts[i].Y = float64(data.ArrayY[i])
 	}
 	return pts
 }
 
-func line(data *NewData) plotter.XYs {
+func lineLag(data *NewData) plotter.XYs {
 	var h float32 = 0.01
 	var l int = 1
-	for k:=data.ArrayX[0];k < data.ArrayX[data.N-1];k+=h {
-		l+=1
+	for k := data.ArrayX[0]; k < data.ArrayX[data.N-1]; k += h {
+		l += 1
 	}
 	pts := make(plotter.XYs, l)
 
-	var up,down float32 = 1,1
+	var up, down float32 = 1, 1
 	var res float32 = 0
-	for k:=0;k < l;k++ {
+	for k := 0; k < l; k++ {
 		for i := 0; i < data.N; i++ {
 			for j := 0; j < data.N; j++ {
 				if i != j {
-					up *= data.ArrayX[0] - data.ArrayX[j] + float32(k) * h
+					up *= data.ArrayX[0] - data.ArrayX[j] + float32(k)*h
 					down *= data.ArrayX[i] - data.ArrayX[j]
 				}
 			}
 			res += data.ArrayY[i] * up / down
-			up,down = 1,1
+			up, down = 1, 1
 		}
-		pts[k].X = float64(data.ArrayX[0]+float32(k) * h)
+		pts[k].X = float64(data.ArrayX[0] + float32(k)*h)
 		pts[k].Y = float64(res)
-		res=0
+		res = 0
 	}
 	return pts
 }
 
-func Newton(data *NewData){
-	rand.Seed(int64(0))
-	scatterData := point(data)
-	lineData := line(data)
-
-	// Create a new plot, set its title and
-	// axis labels.
-	p := plot.New()
-
-	p.Title.Text = "Lagrange"
-	p.X.Label.Text = "X"
-	p.Y.Label.Text = "Y"
-	// Draw a grid behind the data
-	p.Add(plotter.NewGrid())
-
-	// Make a scatter plotter and set its style.
-	s, err := plotter.NewScatter(scatterData)
-	if err != nil {
-		panic(err)
+func lineNewt(data *NewData) plotter.XYs {
+	var h float32 = 0.01
+	var l, m int = 1, 1
+	for k := data.ArrayX[0]; k < data.ArrayX[data.N-1]; k += h {
+		l += 1
 	}
-	s.GlyphStyle.Color = color.RGBA{R: 7, G: 28, B: 112}
+	pts := make(plotter.XYs, l)
 
-	// Make a line plotter and set its style.
-	l, err := plotter.NewLine(lineData)
-	if err != nil {
-		panic(err)
+	var up float32 = 1
+	var res float32 = data.ArrayY[0]
+	for k := 0; k < l; k++ {
+		for i := 0; i < l; i++ {
+			for j := 0; j < m; j++ {
+				up *= data.ArrayX[0] + float32(k)*h - data.ArrayX[j]
+			}
+			res +=  getAns(m, 0) * up / (float32(fuctorial(m)) * float32(math.Pow(float64(h), float64(m))))
+			up = 1
+			m++
+		}
+		pts[k].X = float64(data.ArrayX[0] + float32(k)*h)
+		pts[k].Y = float64(res)
+		res = data.ArrayY[0]
+		m = 1
 	}
-	l.LineStyle.Width = vg.Points(1)
-	l.LineStyle.Color = color.RGBA{R: 165, G: 116, B: 0}
+	return pts
+}
+func getAns(up int, down int) float32 {
+	res := float32(0.0)
 
-	// entry for each
-	p.Add(s, l)
-	p.Legend.Add("points", s)
-	p.Legend.Add("function", l)
+	return res
+}
 
-	// Save the plot to a PNG file.
-	if err := p.Save(6*vg.Inch, 6*vg.Inch, "lagrange.png"); err != nil {
-		panic(err)
+func fuctorial(n int) int {
+	res := 1
+	for i := 0; i < n; i++ {
+		res *= n
 	}
+	return res
 }

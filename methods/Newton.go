@@ -21,7 +21,7 @@ func (Newton) Count(data *NewData) {
 		zn = 1.0
 	}
 	_, _ = fmt.Fprintf(os.Stdout, "Вычесленный Y методом Ньютона для неравноотстоющих узлов: %f \n", answer)
-	draw.Newton(data)
+	draw.Graph(data,0)
 }
 
 func getF(data *NewData, k int, max int) float32 {

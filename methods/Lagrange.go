@@ -24,5 +24,5 @@ func (Lagrange) Count(data *NewData) {
 		up,down = 1,1
 	}
 	_, _ = fmt.Fprintf(os.Stdout, "Вычесленный Y методом Лагранжа: %f \n", res)
-	draw.Lagrange(data)
+	draw.Graph(data,1)
 }
