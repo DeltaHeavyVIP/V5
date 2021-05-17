@@ -96,6 +96,45 @@ func lineLag(data *NewData) plotter.XYs {
 	return pts
 }
 
+/*func lineNewt(data *NewData) plotter.XYs {
+	var h float32 = 0.01
+	var l = 1
+	for k := data.ArrayX[0]; k < data.ArrayX[data.N-1]; k += h {
+		l += 1
+	}
+	pts := make(plotter.XYs, l)
+
+	var res float32 = data.ArrayY[0]
+	for k := 0; k < l; k++ {
+		res = bitch(data,data.ArrayX[0] + float32(k)*h)
+		pts[k].X = float64(data.ArrayX[0] + float32(k)*h)
+		pts[k].Y = float64(res)
+		//fmt.Println("----",data.ArrayX[0] + float32(k)*h,"\t\t",res)
+	}
+	return pts
+}
+
+func bitch(data *NewData, x float32) float32 {
+	answer := data.ArrayY[0]
+	zn := float32(1.0)
+	for i := 1; i < data.N; i++ {
+		for j := 0; j < i; j++ {
+			zn *= x - data.ArrayX[j]
+		}
+		answer += getF(data, i+1, i) * zn
+		zn = 1.0
+	}
+	return answer
+}
+func getF(data *NewData, k int, max int) float32 {
+	if k == 2 {
+		return (data.ArrayY[max] - data.ArrayY[max-1]) / (data.ArrayX[max] - data.ArrayX[max-1])
+	} else {
+		return (getF(data,k-1,max)-getF(data,2,max-1))/(data.ArrayX[max] - data.ArrayX[max - k + 1])
+	}
+}*/
+
+//Я писал код ниже и разбирался как работает метод Ньютона для равноотстоящих узлов часов 6, а мог просто вызывать функцию из класса Newton, господи, какой я тупой, просто ебнешься
 func lineNewt(data *NewData) plotter.XYs {
 	var h float32 = 0.01
 	var l = 1
