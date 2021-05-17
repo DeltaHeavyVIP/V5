@@ -6,7 +6,6 @@ import (
 	"gonum.org/v1/plot/plotter"
 	"gonum.org/v1/plot/vg"
 	"image/color"
-	"math"
 )
 
 func Graph(data *NewData, name int) {
@@ -99,40 +98,56 @@ func lineLag(data *NewData) plotter.XYs {
 
 func lineNewt(data *NewData) plotter.XYs {
 	var h float32 = 0.01
-	var l, m int = 1, 1
+	var l = 1
 	for k := data.ArrayX[0]; k < data.ArrayX[data.N-1]; k += h {
 		l += 1
 	}
 	pts := make(plotter.XYs, l)
 
+	//fmt.Println(getAns(3,data.ArrayY))
 	var up float32 = 1
 	var res float32 = data.ArrayY[0]
 	for k := 0; k < l; k++ {
-		for i := 0; i < l; i++ {
-			for j := 0; j < m; j++ {
-				up *= data.ArrayX[0] + float32(k)*h - data.ArrayX[j]
-			}
-			res +=  getAns(m, 0) * up / (float32(fuctorial(m)) * float32(math.Pow(float64(h), float64(m))))
-			up = 1
-			m++
+		for i := 1; i < data.N; i++ {
+			up *= data.ArrayX[0] + float32(k)*h - data.ArrayX[i-1]
+			res += getAns(i, data.ArrayY) * up / float32(fuctorial(i))
 		}
 		pts[k].X = float64(data.ArrayX[0] + float32(k)*h)
 		pts[k].Y = float64(res)
 		res = data.ArrayY[0]
-		m = 1
+		up = 1
 	}
 	return pts
 }
-func getAns(up int, down int) float32 {
-	res := float32(0.0)
-
+func getAns(up int, array []float32) float32 {
+	res := float32(array[up])
+	k := 1
+	if up%2 == 1 {
+		for i := up - 1; i >= 0; i-- {
+			k = k * (i + 1) / (up - i)
+			if i%2 == 1 {
+				res += array[i] * float32(k)
+			} else {
+				res -= array[i] * float32(k)
+			}
+		}
+	} else {
+		for i := up - 1; i >= 0; i-- {
+			k = k * (i + 1) / (up - i)
+			if i%2 == 0 {
+				res += array[i] * float32(k)
+			} else {
+				res -= array[i] * float32(k)
+			}
+		}
+	}
 	return res
 }
 
 func fuctorial(n int) int {
 	res := 1
-	for i := 0; i < n; i++ {
-		res *= n
+	for i := 1; i <= n; i++ {
+		res *= i
 	}
 	return res
 }
