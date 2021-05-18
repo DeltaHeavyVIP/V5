@@ -17,7 +17,7 @@ type NewData struct {
 }
 
 func GetData() *NewData {
-	fileOrConsole := "file" //TODO
+	fileOrConsole := "" //TODO
 	for ; fileOrConsole != "file" && fileOrConsole != "console"; {
 		fmt.Print("Ввод данных из file, console: ")
 		fmt.Scan(&fileOrConsole)
