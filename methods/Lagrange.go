@@ -7,9 +7,12 @@ import (
 	"os"
 )
 
-type Lagrange struct{}
+type Lagrange struct{
+	Data *NewData
+}
 
-func (Lagrange) Count(data *NewData) {
+func (l *Lagrange) Count() {
+	data := l.Data
 	var up float32 = 1
 	var down float32 = 1
 	var res float32 = 0

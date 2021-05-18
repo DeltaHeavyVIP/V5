@@ -8,9 +8,12 @@ import (
 	"os"
 )
 
-type Newton struct{}
+type Newton struct{
+	Data *NewData
+}
 
-func (Newton) Count(data *NewData) {
+func (n *Newton) Count() {
+	data:= n.Data
 	answer := data.ArrayY[0]
 	zn := float32(1.0)
 	for i := 1; i < data.N; i++ {
